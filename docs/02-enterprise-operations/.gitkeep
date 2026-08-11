@@ -1,0 +1,431 @@
+# Evaluation, Observability, and Reliability
+
+## Purpose
+
+This document explains how enterprise agent systems are measured, monitored, tested, and improved.
+
+Building an agent that works once is not enough.
+
+An enterprise agent must perform reliably over time, and we need visibility into what happened when it succeeds or fails.
+
+---
+
+# 1. Evaluation
+
+## What Is Evaluation?
+
+Evaluation determines whether an agent performed its work correctly.
+
+It answers:
+
+"Did the agent do a good job?"
+
+Evaluation can occur:
+
+- During development
+- During testing
+- During execution
+- After execution
+- Over many production runs
+
+---
+
+# What Can We Evaluate?
+
+## Output Quality
+
+Was the final answer or work product correct?
+
+Examples:
+
+- Accurate
+- Complete
+- Relevant
+- Properly formatted
+
+## Decision Quality
+
+Did the agent make the correct decision?
+
+Example:
+
+Was a genuinely high-risk customer correctly identified as high risk?
+
+## Tool Selection
+
+Did the agent use the appropriate tool?
+
+Example:
+
+Did it retrieve the customer record before making a recommendation?
+
+## Process Compliance
+
+Did the agent follow the required procedure?
+
+Example:
+
+Did it obtain human approval before sending the customer communication?
+
+## Business Outcome
+
+Did the work actually improve the business result?
+
+Examples:
+
+- Reduced processing time
+- Increased accuracy
+- Reduced manual work
+- Improved customer experience
+
+---
+
+# Success Criteria
+
+Before building an agent, define what good looks like.
+
+This connects directly to the PLS Agent Design Canvas question:
+
+"What does good look like?"
+
+Examples:
+
+- 95% classification accuracy
+- Less than 5% false positives
+- 50% reduction in manual review time
+- Zero unauthorized customer communications
+
+If success is not defined, evaluation becomes subjective.
+
+---
+
+# 2. Observability
+
+## What Is Observability?
+
+Observability provides visibility into what happened while the agent was operating.
+
+It answers:
+
+"What happened inside the system?"
+
+Useful information may include:
+
+- Input received
+- Model used
+- Instructions used
+- Decisions made
+- Tools called
+- Tool results
+- Agent handoffs
+- Errors
+- Human approvals
+- Execution time
+- Cost
+- Final output
+
+---
+
+# Logging
+
+Logging records events.
+
+Example:
+
+10:02 — Customer analysis started
+
+10:02 — CRM tool called
+
+10:03 — Usage data retrieved
+
+10:03 — Risk analysis completed
+
+10:03 — Human approval requested
+
+Logs help reconstruct what happened.
+
+---
+
+# Tracing
+
+Tracing follows the complete execution path through the system.
+
+Example:
+
+Customer Risk Agent
+
+↓
+
+CRM Tool
+
+↓
+
+Support Tool
+
+↓
+
+Risk Analysis Skill
+
+↓
+
+Manager Agent
+
+↓
+
+Human Approval
+
+A trace lets us follow the path of one execution from beginning to end.
+
+---
+
+# Monitoring
+
+Monitoring looks across executions over time.
+
+Examples:
+
+- Failure rate
+- Average execution time
+- Tool errors
+- Token usage
+- Cost per task
+- Escalation rate
+- Success rate
+
+Remember:
+
+Logging = What events occurred?
+
+Tracing = What path did this execution take?
+
+Monitoring = How is the system performing over time?
+
+---
+
+# 3. Reliability
+
+## What Is Reliability?
+
+Reliability means the system performs its intended function consistently under expected conditions.
+
+It answers:
+
+"Can we depend on this system?"
+
+An agent that works correctly 7 out of 10 times may make a good demonstration.
+
+It may not make a good production system.
+
+---
+
+# Sources of Failure
+
+Agent systems can fail for many reasons.
+
+Examples:
+
+- Incorrect reasoning
+- Missing context
+- Bad data
+- Tool failure
+- API failure
+- Permission issue
+- Incorrect routing
+- Model behavior
+- Network failure
+- Poor instructions
+- Knowledge retrieval failure
+
+Production architecture assumes failures will occur.
+
+---
+
+# Error Handling
+
+A reliable agent should know what to do when something fails.
+
+Possible responses:
+
+RETRY
+
+Try the action again.
+
+↓
+
+FALLBACK
+
+Use another approved method.
+
+↓
+
+ESCALATE
+
+Transfer responsibility to a human.
+
+↓
+
+STOP SAFELY
+
+End execution without causing damage.
+
+---
+
+# Deterministic Validation
+
+Not every result should be evaluated by another LLM.
+
+Whenever possible, use deterministic checks.
+
+Examples:
+
+Required field exists?
+
+YES / NO
+
+Email address valid?
+
+YES / NO
+
+Record successfully created?
+
+YES / NO
+
+Amount within approved limit?
+
+YES / NO
+
+Use deterministic validation when the answer can be objectively verified.
+
+---
+
+# Human Evaluation
+
+Humans remain useful evaluators.
+
+Examples:
+
+- Review complex recommendations
+- Judge subjective quality
+- Review edge cases
+- Approve high-risk outputs
+- Create examples of good and bad performance
+
+Human feedback can also improve future evaluation criteria.
+
+---
+
+# Test Cases
+
+Agents should be tested against defined scenarios before production use.
+
+Examples:
+
+## Normal Case
+
+Everything works as expected.
+
+## Missing Information
+
+Required data is unavailable.
+
+## Tool Failure
+
+An external system fails.
+
+## Ambiguous Request
+
+The objective is unclear.
+
+## Boundary Case
+
+The request approaches a permission or policy limit.
+
+## Adversarial Case
+
+Input attempts to make the agent behave incorrectly or bypass controls.
+
+Testing only the happy path is insufficient.
+
+---
+
+# Evaluation Loop
+
+DEFINE SUCCESS
+
+↓
+
+BUILD
+
+↓
+
+TEST
+
+↓
+
+OBSERVE
+
+↓
+
+EVALUATE
+
+↓
+
+IDENTIFY FAILURE
+
+↓
+
+IMPROVE
+
+↓
+
+TEST AGAIN
+
+This cycle continues after deployment.
+
+---
+
+# Business Evaluation
+
+Technical success does not automatically equal business success.
+
+Example:
+
+Agent classification accuracy = 97%
+
+But:
+
+CSMs ignore its recommendations.
+
+The agent may be technically successful but operationally unsuccessful.
+
+Therefore evaluate both:
+
+TECHNICAL PERFORMANCE
+
+and
+
+BUSINESS OUTCOME
+
+---
+
+# Key Principle
+
+If you cannot observe an agent's behavior, you cannot reliably evaluate or improve it.
+
+If you cannot define success, you cannot prove business value.
+
+---
+
+# Key Takeaway
+
+Evaluation = Did it work correctly?
+
+Observability = What happened?
+
+Reliability = Can we depend on it?
+
+Logging = What events happened?
+
+Tracing = What path did it take?
+
+Monitoring = How is it performing over time?
